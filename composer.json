@@ -1,0 +1,24 @@
+{
+    "name": "andreyserdjuk/symfony_formview_normalizer",
+    "authors": [
+        {
+            "name": "andreyserdjuk",
+            "email": "ase6120@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "symfony/form": "^3.2",
+        "phpunit/phpunit": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AndreySerdjuk\\SymfonyFormNormalizer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    }
+}
