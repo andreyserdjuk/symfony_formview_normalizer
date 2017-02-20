@@ -25,7 +25,16 @@ class SymfonyFormNormalizer
     {
         $vars = [];
 
+//        $blockPrefixes = isset($formView->vars['block_prefixes'])?:[];
+
+//        if (isset($blockPrefixes[1]['choice'])) {
+//        }
+
         foreach ($formView->vars as $varName => $var) {
+//            if (is_array($var)) {
+//                $vars[$varName] = $this->extractVars()
+//            }
+
             if (!is_object($var)) {
                 $vars[$varName] = $var;
             }
