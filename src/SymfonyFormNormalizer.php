@@ -16,30 +16,35 @@ class SymfonyFormNormalizer
             }
         }
 
-        $normalizedView['vars'] = $this->extractVars($formView);
+        $normalizedView['vars'] = $this->filterVars($formView->vars);
 
         return $normalizedView;
     }
 
-    protected function extractVars(FormView $formView)
+    /**
+     * Remove huge extra vars like choices for date, time etc.
+     *
+     * @param array $vars
+     * @return array
+     */
+    protected function filterVars(array $vars)
     {
-        $vars = [];
-
 //        $blockPrefixes = isset($formView->vars['block_prefixes'])?:[];
 
 //        if (isset($blockPrefixes[1]['choice'])) {
 //        }
+        $output = [];
 
-        foreach ($formView->vars as $varName => $var) {
-//            if (is_array($var)) {
-//                $vars[$varName] = $this->extractVars()
-//            }
+        foreach ($vars as $varName => $var) {
+            if (is_array($var)) {
+                $vars[$varName] = $this->filterVars($var);
+            }
 
             if (!is_object($var)) {
-                $vars[$varName] = $var;
+                $output[$varName] = $var;
             }
         }
 
-        return $vars;
+        return $output;
     }
 }

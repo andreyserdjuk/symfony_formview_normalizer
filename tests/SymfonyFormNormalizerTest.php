@@ -4,7 +4,9 @@ namespace Tests;
 
 use AndreySerdjuk\SymfonyFormNormalizer\SymfonyFormNormalizer;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\Extension\Core\CoreExtension;
 use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
+use Symfony\Component\Form\FormFactoryBuilder;
 use Symfony\Component\Form\Forms;
 use Tests\Form\TestFormType;
 
@@ -16,6 +18,10 @@ class SymfonyFormNormalizerTest extends TestCase
 {
     public function testNormilize()
     {
+        $builder = new FormFactoryBuilder();
+        $coreExtension = new CoreExtension();
+        $builder->addExtension(new CoreExtension());
+
         $formFactory = Forms::createFormFactoryBuilder()
             ->addExtension(new HttpFoundationExtension())
             ->getFormFactory();
