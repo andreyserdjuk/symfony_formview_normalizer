@@ -4,15 +4,24 @@ namespace AndreySerdjuk\SymfonyFormNormalizer;
 
 use Symfony\Component\Form\FormView;
 
-class SymfonyFormNormalizer
+class DelegatingSymfonyFormNormalizer
 {
+    /**
+     * @var array
+     */
+    protected $formNormalizers;
+
     public function normalize(FormView $formView)
     {
         $normalizedView = ['children' => []];
 
         if (true === $formView->vars['compound']) {
             foreach ($formView->children as $childName => $child) {
-                $normalizedView['children'][$childName] = $this->normalize($child);
+                if ($this->supports($child)) {
+                    $normalizedView['children'][$childName] = $this->normalize($child);
+                } else {
+                    
+                }
             }
         }
 
