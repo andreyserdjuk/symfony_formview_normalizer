@@ -6,14 +6,16 @@
             "email": "ase6120@gmail.com"
         }
     ],
-    "require": {},
+    "require": {
+        "symfony/symfony": "~2.8",
+        "symfony/form": "~2.8"
+    },
     "require-dev": {
-        "symfony/form": "^3.2",
-        "phpunit/phpunit": "^6.0"
+        "phpunit/phpunit": "^5.7"
     },
     "autoload": {
         "psr-4": {
-            "AndreySerdjuk\\SymfonyFormNormalizer\\": "src/"
+            "AndreySerdjuk\\SymfonyFormViewNormalizer\\": "src/"
         }
     },
     "autoload-dev": {

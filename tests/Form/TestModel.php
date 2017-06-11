@@ -38,128 +38,80 @@ class TestModel
     /**
      * @return int
      */
-    public function getId(): int
+    public function getId()
     {
         return $this->id;
     }
 
     /**
      * @param int $id
-     * @return TestModel
      */
-    public function setId(int $id): TestModel
+    public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
     }
 
     /**
      * @return string
      */
-    public function getSomeText(): string
+    public function getSomeText()
     {
         return $this->someText;
     }
 
     /**
      * @param string $someText
-     * @return TestModel
      */
-    public function setSomeText(string $someText): TestModel
+    public function setSomeText($someText)
     {
         $this->someText = $someText;
-
-        return $this;
     }
 
     /**
      * @return \DateTime
      */
-    public function getBirthday(): \DateTime
+    public function getBirthday()
     {
         return $this->birthday;
     }
 
     /**
      * @param \DateTime $birthday
-     * @return TestModel
      */
-    public function setBirthday(\DateTime $birthday): TestModel
+    public function setBirthday($birthday)
     {
         $this->birthday = $birthday;
-
-        return $this;
     }
 
     /**
      * @return bool
      */
-    public function isActive(): bool
+    public function isActive()
     {
         return $this->active;
     }
 
     /**
      * @param bool $active
-     * @return TestModel
      */
-    public function setActive(bool $active): TestModel
+    public function setActive($active)
     {
         $this->active = $active;
-
-        return $this;
     }
 
     /**
      * @return array
      */
-    public function getFavoriteCars(): array
+    public function getFavoriteCars()
     {
         return $this->favoriteCars;
     }
 
     /**
      * @param array $favoriteCars
-     * @return TestModel
      */
-    public function setFavoriteCars(array $favoriteCars): TestModel
+    public function setFavoriteCars($favoriteCars)
     {
         $this->favoriteCars = $favoriteCars;
-
-        return $this;
     }
-
-
-
-//    ButtonType
-//    CollectionType
-//    CountryType
-//    CurrencyType
-//    DateIntervalType
-//    DateTimeType
-//    DateType
-//    EmailType
-//    FileType
-//    FormType
-//    HiddenType
-//    IntegerType
-//    LanguageType
-//    LocaleType
-//    MoneyType
-//    NumberType
-//    PasswordType
-//    PercentType
-//    RadioType
-//    RangeType
-//    RepeatedType
-//    ResetType
-//    SearchType
-//    SubmitType
-//    TextareaType
-//    TextType
-//    TimeType
-//    TimezoneType
-//    UrlType
-
 }
