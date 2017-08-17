@@ -61,7 +61,7 @@ class DelegatingFormViewNormalizer implements FormViewNormalizerInterface
         } else {
             $output['widget_attributes'] = $this->extractAttrs($formView);
 
-            if (true === $formView->vars['compound']) {
+            if (isset($formView->vars['compound']) && true === $formView->vars['compound']) {
                 foreach ($formView->children as $name => $child) {
                     $output['children'][$name] = $this->normalizeChild($child);
                 }
