@@ -21,16 +21,16 @@ class DelegatingFormViewNormalizer implements FormViewNormalizerInterface
     {
         $normalizedView = [];
 
+        $normalizedView['id'] = $formView->vars['id'];
         $normalizedView['name'] = $formView->vars['name'];
+        $normalizedView['label'] = $formView->vars['label'];
+        $normalizedView['label_format'] = $formView->vars['label_format'];
+        $normalizedView['read_only'] = $formView->vars['read_only'];
+        $normalizedView['multipart'] = $formView->vars['multipart'];
+        $normalizedView['valid'] = $formView->vars['valid'];
         $normalizedView['method'] = strtolower($formView->vars['method']);
-
-        if (isset($formView->vars['action']) && $formView->vars['action']) {
-            $normalizedView['action'] = $formView->vars['action'];
-        }
-
-        $normalizedView['widget_container_attributes'] = $this->extractAttrs($formView);
-
-        $normalizedView += $formView->vars['attr'];
+        $normalizedView['action'] = $formView->vars['action'];
+        $normalizedView['attr'] = $formView->vars['attr'];
 
         foreach ($formView->children as $name => $child) {
             $normalizedView['children'][$name] = $this->normalizeChild($child);
@@ -58,14 +58,15 @@ class DelegatingFormViewNormalizer implements FormViewNormalizerInterface
 
         if ($normalizer = $this->findNormalizer($formView)) {
             $output = $normalizer->normalize($formView);
-        } else {
-            $output['widget_attributes'] = $this->extractAttrs($formView);
-
-            if (isset($formView->vars['compound']) && true === $formView->vars['compound']) {
-                foreach ($formView->children as $name => $child) {
-                    $output['children'][$name] = $this->normalizeChild($child);
-                }
+        } elseif (isset($formView->vars['compound']) && true === $formView->vars['compound']) {
+            foreach ($formView->children as $name => $child) {
+                $output['children'][$name] = $this->normalizeChild($child);
             }
+        } else {
+            throw new \RuntimeException(sprintf(
+                'Cannot normalize form type for "%s" field.',
+                $formView->vars['full_name']
+            ));
         }
 
         return $output;
@@ -73,52 +74,14 @@ class DelegatingFormViewNormalizer implements FormViewNormalizerInterface
 
     protected function findNormalizer(FormView $formView)
     {
-        foreach ($this->normalizers as $normalizer) {
-            if ($normalizer->supports($formView)) {
-                return $normalizer;
-            }
-        }
-    }
+        $normalizer = null;
 
-    /**
-     * @param FormView $formView
-     * @return array
-     */
-    protected function extractAttrs(FormView $formView)
-    {
-        $normalizedView = [];
-
-        foreach ($formView->vars as $key => $val) {
-            if (in_array($key, ['placeholder', 'title'])) {
-                // todo escape and translate, @see vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/views/Form/widget_container_attributes.html.php
-                if (false !== $formView->vars['translation_domain']) {
-                    // todo translate val below
-                }
-                $normalizedView[$key] = $val;
-            } elseif (is_bool($val)) {
-                // todo escape key
-                $normalizedView[$key] = $val;
-            } elseif (in_array(gettype($val), ['string', 'integer', 'float'])) {
-                // todo or if it's object with __toString()
-                // todo escape key and val
-                $normalizedView[$key] = $val;
+        foreach ($this->normalizers as $n) {
+            if ($n->supports($formView)) {
+                $normalizer = $n;
             }
         }
 
-        if (isset($formView->vars['choices'])) {
-            foreach ($formView->vars['choices'] as $choice) {
-                $normalizedView['choices'][] = (array) $choice;
-            }
-        }
-
-        $normalizedView['block_prefixes'] = $formView->vars['block_prefixes'];
-//        if (!isset($normalizedView['type']) && !$formView->vars['compound']) {
-//            $normalizedView['type'] = 'text';
-//        }
-//
-//        $typeKey = count($formView->vars['block_prefixes']) - 1;
-//        $output[self::INPUT_TYPE] = $formView->vars['block_prefixes'][$typeKey];
-
-        return $normalizedView;
+        return $normalizer;
     }
 }

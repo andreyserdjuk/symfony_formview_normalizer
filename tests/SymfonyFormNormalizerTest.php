@@ -3,8 +3,8 @@
 namespace Tests;
 
 use AndreySerdjuk\SymfonyFormViewNormalizer\DelegatingFormViewNormalizer;
+use AndreySerdjuk\SymfonyFormViewNormalizer\OmnivorousFormViewNormalizer;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Form\Extension\HttpFoundation\HttpFoundationExtension;
 use Symfony\Component\Form\Forms;
 use Tests\Form\TestFormType;
 
@@ -16,17 +16,19 @@ class SymfonyFormNormalizerTest extends TestCase
 {
     public function testNormilize()
     {
-        $formFactory = Forms::createFormFactoryBuilder()
-            ->addExtension(new HttpFoundationExtension())
-            ->getFormFactory();
-
-        $form = $formFactory->create(TestFormType::class);
-        $view = $form->createView();
+        $formView = Forms::createFormFactory()->create(TestFormType::class)->createView();
         $normalizer = new DelegatingFormViewNormalizer();
-        $data = $normalizer->normalize($view);
+        $normalizer->addNormalizer(new OmnivorousFormViewNormalizer());
+        $data = $normalizer->normalize($formView);
 
         $this->assertTrue(is_array($data));
         $this->assertArrayHasKey('children', $data);
-        $this->assertCount(5, $data['children']);
+        $this->assertCount(33, $data['children']);
+
+        foreach ($data['children'] as $childData) {
+            $this->assertArrayHasKey('widget_attributes', $childData);
+            $this->assertArrayHasKey('name', $childData['widget_attributes']);
+            $this->assertArrayHasKey('id', $childData['widget_attributes']);
+        }
     }
 }

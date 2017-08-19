@@ -4,12 +4,16 @@ namespace Tests\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use \Symfony\Component\Form\Extension\Core\Type;
 
 /**
  * Class TestFormType
@@ -24,42 +28,160 @@ class TestFormType extends AbstractType
     {
         $builder
             ->add(
-                'id',
-                NumberType::class
-            )
-            ->add(
-                'someText',
-                TextareaType::class
+            'form',
+            Type\FormType::class
             )
             ->add(
                 'birthday',
-                BirthdayType::class
+                Type\BirthdayType::class
             )
             ->add(
-                'active',
-                CheckboxType::class
+                'checkbox',
+                Type\CheckboxType::class
             )
             ->add(
-                'favoriteCars',
-                ChoiceType::class,
+                'choice_multiple_expanded',
+                Type\ChoiceType::class,
                 [
                     'choices' => [
-                        'vw_golf' => 'vw golf',
-                        'grand_vitara' => 'grand vitara',
-                        'toyota_prado' => 'toyota prado',
+                        'test_value_1' => 'test_label_1',
+                        'test_value_2' => 'test_label_2',
                     ],
+                    'multiple' => true,
+                    'expanded' => true,
                 ]
             )
-        ;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'data_class' => TestModel::class,
-        ]);
+            ->add(
+                'choice_multiple_not_expanded',
+                Type\ChoiceType::class,
+                [
+                    'choices' => [
+                        'test_value_1' => 'test_label_1',
+                        'test_value_2' => 'test_label_2',
+                    ],
+                    'multiple' => true,
+                    'expanded' => false,
+                ]
+            )
+            ->add(
+                'choice',
+                Type\ChoiceType::class,
+                [
+                    'choices' => [
+                        'test_value_1' => 'test_label_1',
+                        'test_value_2' => 'test_label_2',
+                    ],
+                    'multiple' => false,
+                    'expanded' => false,
+                ]
+            )
+            ->add(
+                'collection',
+                Type\CollectionType::class
+            )
+            ->add(
+                'country',
+                Type\CountryType::class
+            )
+            ->add(
+                'date',
+                Type\DateType::class
+            )
+            ->add(
+                'datetime',
+                Type\DateTimeType::class
+            )
+            ->add(
+                'email',
+                Type\EmailType::class
+            )
+            ->add(
+                'hidden',
+                Type\HiddenType::class
+            )
+            ->add(
+                'integer',
+                Type\IntegerType::class
+            )
+            ->add(
+                'language',
+                Type\LanguageType::class
+            )
+            ->add(
+                'locale',
+                Type\LocaleType::class
+            )
+            ->add(
+                'money',
+                Type\MoneyType::class
+            )
+            ->add(
+                'number',
+                Type\NumberType::class
+            )
+            ->add(
+                'password',
+                Type\PasswordType::class
+            )
+            ->add(
+                'percent',
+                Type\PercentType::class
+            )
+            ->add(
+                'radio',
+                Type\RadioType::class
+            )
+            ->add(
+                'range',
+                Type\RangeType::class
+            )
+            ->add(
+                'repeated',
+                Type\RepeatedType::class
+            )
+            ->add(
+                'search',
+                Type\SearchType::class
+            )
+            ->add(
+                'textarea',
+                Type\TextareaType::class
+            )
+            ->add(
+                'text',
+                Type\TextType::class
+            )
+            ->add(
+                'time',
+                Type\TimeType::class
+            )
+            ->add(
+                'timezone',
+                Type\TimezoneType::class
+            )
+            ->add(
+                'url',
+                Type\UrlType::class
+            )
+            ->add(
+                'file',
+                Type\FileType::class
+            )
+            ->add(
+                'button',
+                Type\ButtonType::class
+            )
+            ->add(
+                'submit',
+                Type\SubmitType::class
+            )
+            ->add(
+                'reset',
+                Type\ResetType::class
+            )
+            ->add(
+                'currency',
+                Type\CurrencyType::class
+            );
     }
 }
