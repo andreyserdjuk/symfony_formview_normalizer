@@ -3,6 +3,7 @@
 namespace AndreySerdjuk\SymfonyFormViewNormalizer;
 
 use Symfony\Component\Form\FormView;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * As every form view has common structure it can be normalized in common way.
@@ -11,6 +12,16 @@ use Symfony\Component\Form\FormView;
  */
 class OmnivorousFormViewNormalizer implements FormViewNormalizerInterface
 {
+    /**
+     * @var TranslatorInterface
+     */
+    protected $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -45,25 +56,25 @@ class OmnivorousFormViewNormalizer implements FormViewNormalizerInterface
         $normalizedView = [];
 
         foreach ($formView->vars as $key => $val) {
-            if (in_array($key, ['placeholder', 'title'])) {
-                // todo escape and translate, @see vendor/symfony/symfony/src/Symfony/Bundle/FrameworkBundle/Resources/views/Form/widget_container_attributes.html.php
+            if (in_array($key, ['placeholder', 'title', 'label'])) {
                 if (false !== $formView->vars['translation_domain']) {
-                    // todo translate val below
+                    $val = $this->translator->trans($val, [], $formView->vars['translation_domain']);
                 }
                 $normalizedView[$key] = $val;
             } elseif (is_bool($val)) {
-                // todo escape key
                 $normalizedView[$key] = $val;
             } elseif (in_array(gettype($val), ['string', 'integer', 'float'])) {
-                // todo or if it's object with __toString()
-                // todo escape key and val
                 $normalizedView[$key] = $val;
+            } elseif (method_exists($val, '__toString')) {
+                $normalizedView[$key] = (string) $val;
             }
         }
 
         if (isset($formView->vars['choices'])) {
             foreach ($formView->vars['choices'] as $choice) {
-                $normalizedView['choices'][] = (array) $choice;
+                $choiceArr = (array) $choice;
+                $choiceArr['label'] = $this->translator->trans($choiceArr['label']);
+                $normalizedView['choices'][] = $choiceArr;
             }
         }
 

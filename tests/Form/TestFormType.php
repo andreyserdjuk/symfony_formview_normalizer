@@ -37,7 +37,10 @@ class TestFormType extends AbstractType
             )
             ->add(
                 'checkbox',
-                Type\CheckboxType::class
+                Type\CheckboxType::class,
+                [
+                    'label' => 'Symfony is great!',
+                ]
             )
             ->add(
                 'choice_multiple_expanded',
@@ -49,6 +52,7 @@ class TestFormType extends AbstractType
                     ],
                     'multiple' => true,
                     'expanded' => true,
+                    'label' => 'Symfony is great!',
                 ]
             )
             ->add(
