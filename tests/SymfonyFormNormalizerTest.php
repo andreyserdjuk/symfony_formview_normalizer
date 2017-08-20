@@ -26,9 +26,20 @@ class SymfonyFormNormalizerTest extends TestCase
         $this->assertCount(33, $data['children']);
 
         foreach ($data['children'] as $childData) {
-            $this->assertArrayHasKey('widget_attributes', $childData);
-            $this->assertArrayHasKey('name', $childData['widget_attributes']);
-            $this->assertArrayHasKey('id', $childData['widget_attributes']);
+            $this->assertChildren($childData);
+        }
+    }
+
+    protected function assertChildren($childData)
+    {
+        $this->assertArrayHasKey('widget_attributes', $childData);
+        $this->assertArrayHasKey('name', $childData['widget_attributes']);
+        $this->assertArrayHasKey('id', $childData['widget_attributes']);
+
+        if (isset($childData['children'])) {
+            foreach ($childData['children'] as $child) {
+                $this->assertChildren($child);
+            }
         }
     }
 }

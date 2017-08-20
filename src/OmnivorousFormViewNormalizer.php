@@ -18,9 +18,10 @@ class OmnivorousFormViewNormalizer implements FormViewNormalizerInterface
     {
         $output['widget_attributes'] = $this->extractAttrs($formView);
 
-        if (isset($formView->vars['compound']) && true === $formView->vars['compound']) {
+        if (isset($formView->children) && $formView->children) {
+            $output['children'] = [];
             foreach ($formView->children as $name => $child) {
-                $output['children'][$name] = $this->normalizeChild($child);
+                $output['children'][$name] = $this->normalize($child);
             }
         }
 
@@ -71,19 +72,5 @@ class OmnivorousFormViewNormalizer implements FormViewNormalizerInterface
         }
 
         return $normalizedView;
-    }
-
-
-    protected function normalizeChild(FormView $formView)
-    {
-        $output = [];
-
-        if (isset($formView->vars['compound']) && true === $formView->vars['compound']) {
-            foreach ($formView->children as $name => $child) {
-                $output['children'][$name] = $this->normalizeChild($child);
-            }
-        }
-
-        return $output;
     }
 }
