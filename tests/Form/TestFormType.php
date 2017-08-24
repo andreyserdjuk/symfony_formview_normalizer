@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Form;
+namespace Tests\AndreySerdjuk\SymfonyFormViewNormalizer\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
 use Symfony\Component\Form\Extension\Core\Type\ButtonType;
@@ -79,6 +80,12 @@ class TestFormType extends AbstractType
                     'expanded' => false,
                 ]
             )
+//            ->add(
+//                'entity',
+//                EntityType::class,
+//                [
+//                ]
+//            )
             ->add(
                 'collection',
                 Type\CollectionType::class

@@ -1,24 +1,68 @@
 <?php
 
-namespace Tests;
+namespace Tests\AndreySerdjuk\SymfonyFormViewNormalizer;
 
 use AndreySerdjuk\SymfonyFormViewNormalizer\DelegatingFormViewNormalizer;
 use AndreySerdjuk\SymfonyFormViewNormalizer\OmnivorousFormViewNormalizer;
+use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Form\Forms;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
-use Tests\Form\TestFormType;
+use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\Form\TestFormType;
 
 /**
  * Class SymfonyFormNormalizerTest
  * @package AndreySerdjuk\SymfonyFormNormalizer\Tests
  */
-class SymfonyFormNormalizerTest extends TestCase
+class SymfonyFormNormalizerTest extends WebTestCase
 {
+    protected static function getKernelClass()
+    {
+        require_once __DIR__.'/app/AppKernel.php';
+
+        return '\Tests\AndreySerdjuk\SymfonyFormViewNormalizer\app\AppKernel';
+    }
+
+    protected static function createKernel(array $options = array())
+    {
+        $class = self::getKernelClass();
+
+        if (!isset($options['test_case'])) {
+            throw new \InvalidArgumentException('The option "test_case" must be set.');
+        }
+
+        return new $class(
+            $options['test_case'],
+            isset($options['root_config']) ? $options['root_config'] : 'config.yml',
+            isset($options['environment']) ? $options['environment'] : 'frameworkbundletest'.strtolower($options['test_case']),
+            isset($options['debug']) ? $options['debug'] : true
+        );
+    }
+
     public function testNormilize()
     {
-        $formView = Forms::createFormFactory()->create(TestFormType::class)->createView();
+        $client = static::createClient([
+            'test_case' => 'DoctrineInit',
+            'root_config' => 'config.yml',
+        ]);
+
+//        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
+//        $entityManager = EntityManager::create($dbParams, $config);
+//
+//        $em = $client->getContainer()->get('doctrine.default_entity_manager')->getManager();
+        $em = $client->getContainer()->get('doctrine')->getEntityManager();
+        $metadatas = $em->getMetadataFactory()->getAllMetadata();
+        $tool = new SchemaTool($em);
+        $tool->createSchema($metadatas);
+
+        $formView = $client->getContainer()
+            ->get('form.factory')
+            ->create(TestFormType::class)
+            ->createView()
+        ;
         $normalizer = new DelegatingFormViewNormalizer();
 
         $translator = new Translator('fr_FR');
@@ -33,7 +77,7 @@ class SymfonyFormNormalizerTest extends TestCase
 
         $this->assertTrue(is_array($data));
         $this->assertArrayHasKey('children', $data);
-        $this->assertCount(33, $data['children']);
+        $this->assertCount(34, $data['children']);
 
         foreach ($data['children'] as $childData) {
             $this->assertChildren($childData);
