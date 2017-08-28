@@ -1,19 +1,15 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.0/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
-         forceCoversAnnotation="true"
-         beStrictAboutCoversAnnotation="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutTodoAnnotatedTests="true"
-         verbose="true">
-    <testsuite>
-        <directory>tests</directory>
-    </testsuite>
-
+<?xml version="1.0" encoding="utf-8"?>
+<phpunit bootstrap="./tests/app/bootstrap.php" colors="true">
+    <testsuites>
+        <testsuite name="Test Suite">
+            <directory>./tests/</directory>
+        </testsuite>
+    </testsuites>
     <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
+        <whitelist addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./tests/app</directory>
+            <directory suffix=".php">./tests/src</directory>
+            <directory suffix=".php">./tests/Form</directory>
         </whitelist>
     </filter>
 </phpunit>

@@ -1,0 +1,21 @@
+sudo: false
+language: php
+
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.6
+      env:
+        - SYMFONY_VERSION=2.8.*
+        - DB=sqlite
+    - php: 5.6
+      env:
+        - SYMFONY_VERSION=3.3.*
+        - DB=sqlite
+
+before_script:
+  - if [ "$SYMFONY_VERSION" != "" ]; then composer require "symfony/symfony:${SYMFONY_VERSION}" --no-update; fi;
+  - travis_wait composer update --prefer-dist --optimize-autoloader --no-interaction  --no-suggest --prefer-stable
+
+script:
+  - ./vendor/bin/phpunit -v -c ./phpunit.xml
