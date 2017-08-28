@@ -4,6 +4,7 @@ namespace Tests\AndreySerdjuk\SymfonyFormViewNormalizer;
 
 use AndreySerdjuk\SymfonyFormViewNormalizer\DelegatingFormViewNormalizer;
 use AndreySerdjuk\SymfonyFormViewNormalizer\OmnivorousFormViewNormalizer;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
@@ -12,6 +13,7 @@ use Symfony\Component\Form\Forms;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
 use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\Form\TestFormType;
+use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\src\TestBundle\Entity\Test;
 
 /**
  * Class SymfonyFormNormalizerTest
@@ -49,11 +51,8 @@ class SymfonyFormNormalizerTest extends WebTestCase
             'root_config' => 'config.yml',
         ]);
 
-//        $config = Setup::createAnnotationMetadataConfiguration($paths, $isDevMode);
-//        $entityManager = EntityManager::create($dbParams, $config);
-//
-//        $em = $client->getContainer()->get('doctrine.default_entity_manager')->getManager();
-        $em = $client->getContainer()->get('doctrine')->getEntityManager();
+        /** @var EntityManagerInterface $em */
+        $em = $client->getContainer()->get('doctrine.orm.default_entity_manager');
         $metadatas = $em->getMetadataFactory()->getAllMetadata();
         $tool = new SchemaTool($em);
         $tool->createSchema($metadatas);
