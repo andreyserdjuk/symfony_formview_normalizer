@@ -6,7 +6,9 @@ use AndreySerdjuk\SymfonyFormViewNormalizer\DelegatingFormViewNormalizer;
 use AndreySerdjuk\SymfonyFormViewNormalizer\OmnivorousFormViewNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
 use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\Form\TestFormType;
@@ -18,6 +20,9 @@ use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\src\TestBundle\Form\PostType;
  */
 class SymfonyFormNormalizerTest extends WebTestCase
 {
+    /** @var  Client */
+    protected $client;
+
     protected static function getKernelClass()
     {
         require_once __DIR__.'/app/AppKernel.php';
@@ -43,18 +48,13 @@ class SymfonyFormNormalizerTest extends WebTestCase
 
     public function testNormalizeDoctrineType()
     {
-        $client = static::createClient([
-            'test_case' => 'DoctrineInit',
-            'root_config' => 'config.yml',
-        ]);
-
         /** @var EntityManagerInterface $em */
-        $em = $client->getContainer()->get('doctrine.orm.default_entity_manager');
+        $em = $this->client->getContainer()->get('default_entity_manager');
         $metadatas = $em->getMetadataFactory()->getAllMetadata();
         $tool = new SchemaTool($em);
         $tool->createSchema($metadatas);
 
-        $formView = $client->getContainer()
+        $formView = $this->client->getContainer()
             ->get('form.factory')
             ->create(PostType::class)
             ->createView();
@@ -142,5 +142,19 @@ class SymfonyFormNormalizerTest extends WebTestCase
                 $this->assertChildren($child);
             }
         }
+    }
+
+    protected function setUp()
+    {
+        $this->client = static::createClient([
+            'test_case' => 'DoctrineInit',
+            'root_config' => 'config.yml',
+        ]);
+    }
+
+    protected function tearDown()
+    {
+        (new Filesystem())->remove(static::$kernel->getCacheDir());
+        parent::tearDown();
     }
 }

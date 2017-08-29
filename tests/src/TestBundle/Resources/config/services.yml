@@ -1,0 +1,3 @@
+services:
+    default_entity_manager:
+        alias: doctrine.orm.default_entity_manager
