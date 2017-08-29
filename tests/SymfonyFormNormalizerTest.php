@@ -6,14 +6,11 @@ use AndreySerdjuk\SymfonyFormViewNormalizer\DelegatingFormViewNormalizer;
 use AndreySerdjuk\SymfonyFormViewNormalizer\OmnivorousFormViewNormalizer;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
-use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\Doctrine\Form\DoctrineOrmExtension;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\Form\Forms;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
 use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\Form\TestFormType;
-use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\src\TestBundle\Entity\Test;
+use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\src\TestBundle\Form\PostType;
 
 /**
  * Class SymfonyFormNormalizerTest
@@ -44,7 +41,7 @@ class SymfonyFormNormalizerTest extends WebTestCase
         );
     }
 
-    public function testNormilize()
+    public function testNormalizeDoctrineType()
     {
         $client = static::createClient([
             'test_case' => 'DoctrineInit',
@@ -59,9 +56,36 @@ class SymfonyFormNormalizerTest extends WebTestCase
 
         $formView = $client->getContainer()
             ->get('form.factory')
+            ->create(PostType::class)
+            ->createView();
+
+        $normalizer = new DelegatingFormViewNormalizer();
+        $translator = new Translator('fr_FR');
+        $normalizer->addNormalizer(new OmnivorousFormViewNormalizer($translator));
+        $data = $normalizer->normalize($formView);
+
+        $this->assertTrue(is_array($data));
+        $this->assertArrayHasKey('children', $data);
+
+        foreach ($data['children'] as $childData) {
+            $this->assertChildren($childData);
+        }
+
+        $this->assertCount(3, $data['children']);
+    }
+
+    public function testNormilizeAllCoreExtensionTypes()
+    {
+        $client = static::createClient([
+            'test_case' => 'DoctrineInit',
+            'root_config' => 'config.yml',
+        ]);
+
+        $formView = $client->getContainer()
+            ->get('form.factory')
             ->create(TestFormType::class)
-            ->createView()
-        ;
+            ->createView();
+
         $normalizer = new DelegatingFormViewNormalizer();
 
         $translator = new Translator('fr_FR');
