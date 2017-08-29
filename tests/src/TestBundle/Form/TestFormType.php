@@ -1,25 +1,11 @@
 <?php
 
-namespace Tests\AndreySerdjuk\SymfonyFormViewNormalizer\Form;
+namespace Tests\AndreySerdjuk\SymfonyFormViewNormalizer\src\TestBundle\Form;
 
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\BirthdayType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\TimeType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use \Symfony\Component\Form\Extension\Core\Type;
 
-/**
- * Class TestFormType
- * @package AndreySerdjuk\Tests\Form
- */
 class TestFormType extends AbstractType
 {
     /**
@@ -80,12 +66,6 @@ class TestFormType extends AbstractType
                     'expanded' => false,
                 ]
             )
-//            ->add(
-//                'entity',
-//                EntityType::class,
-//                [
-//                ]
-//            )
             ->add(
                 'collection',
                 Type\CollectionType::class

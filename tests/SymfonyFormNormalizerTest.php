@@ -11,12 +11,11 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\Loader\ArrayLoader;
 use Symfony\Component\Translation\Translator;
-use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\Form\TestFormType;
 use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\src\TestBundle\Form\PostType;
+use Tests\AndreySerdjuk\SymfonyFormViewNormalizer\src\TestBundle\Form\TestFormType;
 
 /**
  * Class SymfonyFormNormalizerTest
- * @package AndreySerdjuk\SymfonyFormNormalizer\Tests
  */
 class SymfonyFormNormalizerTest extends WebTestCase
 {
